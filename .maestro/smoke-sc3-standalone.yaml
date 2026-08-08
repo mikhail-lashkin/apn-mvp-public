@@ -1,0 +1,75 @@
+# SC-3 (release APK / S23): быстрые теги QuickNote — группы + toggle лимп → Save → reopen
+appId: com.aipoker.notes
+tags:
+  - sc3
+  - smoke
+  - standalone
+---
+- evalScript: ${output.ts = Date.now()}
+- runFlow: subflows/prepare-table-standalone.yaml
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'SC3_' + output.ts}
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible:
+    text: "Быстрые теги"
+- assertVisible:
+    text: "Preflop"
+- assertVisible:
+    text: "Postflop"
+- scrollUntilVisible:
+    element:
+      text: "лимп"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- assertVisible:
+    text: "лимп"
+
+- tapOn:
+    id: "quick-note-text"
+# eraseText на S23 flaky — поле новой заметки пустое
+- inputText: "SC3 limp BTN / wide 3bet"
+# НЕ hideKeyboard — на Android это Back и закрывает QuickNote
+
+- scrollUntilVisible:
+    element:
+      text: "лимп"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- tapOn:
+    text: "лимп"
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible: "SC3 limp BTN / wide 3bet"
+- assertVisible: "лимп"
+
+- tapOn:
+    id: "close-player-profile"

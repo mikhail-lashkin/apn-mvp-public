@@ -1,0 +1,27 @@
+# Smoke: login → стол → посадить Ivan → заметка (dev-client)
+appId: com.aipoker.notes
+tags:
+  - smoke
+---
+- runFlow: subflows/launch-dev-client.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- runFlow:
+    when:
+      visible:
+        id: "lobby-new-table"
+    file: subflows/open-table.yaml
+
+- runFlow:
+    file: subflows/seat-ivan-note.yaml

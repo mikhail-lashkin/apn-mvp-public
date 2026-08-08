@@ -1,0 +1,10 @@
+appId: com.aipoker.notes
+---
+# Release / embedded-bundle APK — без Metro dev-client
+- launchApp:
+    appId: "com.aipoker.notes"
+    clearState: false
+
+- extendedWaitUntil:
+    visible: "AI Poker Notes"
+    timeout: 90000

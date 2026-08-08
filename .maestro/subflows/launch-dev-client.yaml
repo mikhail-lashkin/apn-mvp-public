@@ -1,0 +1,33 @@
+appId: com.aipoker.notes
+---
+- launchApp:
+    appId: "com.aipoker.notes"
+    clearState: false
+
+# Metro: adb reverse tcp:8081 → localhost (Windows/Hyper-V; надёжнее 10.0.2.2)
+- extendedWaitUntil:
+    visible: "http://localhost:8081"
+    timeout: 15000
+    optional: true
+- tapOn:
+    text: "http://localhost:8081"
+    optional: true
+
+# Fallback без reverse или Linux/macOS эмулятор
+- extendedWaitUntil:
+    visible: "http://10.0.2.2:8081"
+    timeout: 8000
+    optional: true
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
+
+# JS bundle загружен (login или lobby — общий заголовок)
+- extendedWaitUntil:
+    visible: "AI Poker Notes"
+    timeout: 90000
+
+# Первый запуск после clearState — onboarding dev menu
+- tapOn:
+    text: "Continue"
+    optional: true

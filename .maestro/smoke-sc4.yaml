@@ -1,0 +1,11 @@
+# SC-4 (dev-client / эмулятор): заметки RU+EN, полная посадка 8-max, смена игрока, offline
+appId: com.aipoker.notes
+tags:
+  - sc4
+  - p0
+  - smoke
+---
+- evalScript: ${output.ts = Date.now(); output.sid = String(output.ts).slice(-6)}
+- runFlow: subflows/prepare-table-sc1.yaml
+- runFlow: subflows/reset-app.yaml
+- runFlow: subflows/sc4-core.yaml

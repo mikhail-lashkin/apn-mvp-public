@@ -1,0 +1,54 @@
+# UX: кнопка «Лобби» в Быстрых действиях (после создания стола)
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - lobby-back
+---
+- runFlow: subflows/launch-dev-client.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+
+# open -> back -> open -> back
+- runFlow: subflows/open-new-table.yaml
+- scrollUntilVisible:
+    element:
+      id: "table-back-lobby"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: "table-back-lobby"
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 20000
+
+- runFlow: subflows/open-new-table.yaml
+- scrollUntilVisible:
+    element:
+      id: "table-back-lobby"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: "table-back-lobby"
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 20000
+
+- assertVisible:
+    id: "lobby-player-tags"

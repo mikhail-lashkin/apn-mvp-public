@@ -1,0 +1,23 @@
+appId: com.aipoker.notes
+---
+# Создать стол через «+ Новый стол» (демо-столы убраны из лобби)
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+
+- tapOn:
+    id: "lobby-new-table"
+
+- extendedWaitUntil:
+    visible:
+      id: "setup-sheet-save"
+    timeout: 15000
+
+- tapOn:
+    id: "setup-sheet-save"
+
+- extendedWaitUntil:
+    visible:
+      id: "reset-table-local"
+    timeout: 60000

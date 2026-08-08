@@ -1,0 +1,52 @@
+# SC-1: чистый 8-max — HERO + 7 пустых слотов, верстка не плывёт
+# (SetupSheet NativeWind — отдельно; здесь критерий «пустые слоты явные»)
+appId: com.aipoker.notes
+tags:
+  - sc1
+  - smoke
+---
+- runFlow: subflows/prepare-table-sc1.yaml
+
+# Переключить на чистый 8-max (все места пустые кроме HERO)
+- scrollUntilVisible:
+    element:
+      text: "8-max"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    text: "8-max"
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 15000
+
+- assertVisible:
+    text: "HERO"
+- assertVisible:
+    id: "seat-player-4"
+
+- assertVisible:
+    id: "seat-empty-0"
+- assertVisible:
+    id: "seat-empty-1"
+- assertVisible:
+    id: "seat-empty-2"
+- assertVisible:
+    id: "seat-empty-3"
+- assertVisible:
+    id: "seat-empty-5"
+- assertVisible:
+    id: "seat-empty-6"
+- assertVisible:
+    id: "seat-empty-7"
+
+# Пустой слот отличается: tap → «Свободное место»
+- tapOn:
+    id: "seat-empty-2"
+- assertVisible:
+    text: "Свободное место"
+- tapOn:
+    text: "Отмена"
+- assertVisible:
+    id: "seat-empty-2"

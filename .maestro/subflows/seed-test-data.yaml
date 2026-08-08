@@ -1,0 +1,38 @@
+appId: com.aipoker.notes
+---
+# Env: SEAT (default 0), PLAYER_NAME (required)
+# Не вызывать hideKeyboard — на Android это Back и закрывает Modal.
+- tapOn:
+    id: "seat-empty-${SEAT}"
+- tapOn:
+    text: "Новый игрок"
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 15000
+- tapOn:
+    id: "new-player-name"
+# eraseText на S23 иногда DEADLINE_EXCEEDED (gRPC) — поле обычно пустое
+- inputText: ${PLAYER_NAME}
+- assertVisible: ${PLAYER_NAME}
+- waitForAnimationToEnd
+- pressKey: Enter
+# Если Enter не закрыл sheet — тап Create (+ retry)
+- runFlow:
+    when:
+      visible:
+        id: "new-player-create"
+    commands:
+      - tapOn:
+          id: "new-player-create"
+- runFlow:
+    when:
+      visible:
+        id: "new-player-create"
+    commands:
+      - tapOn:
+          text: "Создать"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-${SEAT}"
+    timeout: 30000

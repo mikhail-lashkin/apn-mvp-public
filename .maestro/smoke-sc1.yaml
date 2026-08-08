@@ -1,0 +1,65 @@
+# SC-1: 8-max $1/2, пустые слоты, смешанная посадка, стабильная верстка
+appId: com.aipoker.notes
+tags:
+  - sc1
+  - smoke
+  - p0
+---
+- runFlow: subflows/prepare-table-sc1.yaml
+
+# Шапка стола (если Metro отдал свежий bundle)
+- assertVisible:
+    id: "table-stakes"
+    optional: true
+- assertVisible:
+    text: "$1/2"
+    optional: true
+
+# Критерий: все 8 мест (3 заняты + 5 пустых на пресете sc1)
+- assertVisible:
+    id: "seat-player-0"
+- assertVisible:
+    id: "seat-empty-1"
+- assertVisible:
+    id: "seat-empty-2"
+- assertVisible:
+    id: "seat-player-3"
+- assertVisible:
+    id: "seat-player-4"
+- assertVisible:
+    text: "HERO"
+- assertVisible:
+    id: "seat-empty-5"
+- assertVisible:
+    id: "seat-empty-6"
+- assertVisible:
+    id: "seat-empty-7"
+
+# Занятые места — ники видны
+- assertVisible:
+    text: "Иван"
+- assertVisible:
+    text: "Пётр"
+
+# Пустой слот: tap → диалог → отмена, место остаётся пустым
+- tapOn:
+    id: "seat-empty-1"
+- assertVisible:
+    text: "Свободное место"
+- tapOn:
+    text: "Отмена"
+- assertVisible:
+    id: "seat-empty-1"
+
+# Занятое место: tap → QuickNote (без crash)
+- tapOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+- tapOn:
+    id: "close-player-profile"
+
+- assertVisible:
+    id: "seat-player-0"

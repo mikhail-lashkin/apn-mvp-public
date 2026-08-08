@@ -1,0 +1,156 @@
+# Online Ivan+note → Airplane Петр+note → online → заметка Ивана на месте
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - offline
+---
+- runFlow: subflows/launch-dev-client.yaml
+
+- setAirplaneMode: disabled
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: "lobby-new-table"
+    file: subflows/open-new-table.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "reset-table-local"
+    timeout: 45000
+- scrollUntilVisible:
+    element:
+      id: "reset-table-local"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "reset-table-local"
+- tapOn:
+    text: "Очистить"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 20000
+
+# --- ONLINE: Иван + заметка ---
+- tapOn:
+    id: "seat-empty-0"
+- tapOn:
+    text: "Новый игрок"
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 15000
+- tapOn:
+    id: "new-player-name"
+- inputText: "Ivan"
+- tapOn:
+    id: "new-player-create"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 20000
+- tapOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "3bet light BTN"
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "quick-note-save"
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 20000
+
+# --- AIRPLANE: Петр + заметка ---
+- setAirplaneMode: enabled
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-1"
+    timeout: 10000
+- tapOn:
+    id: "seat-empty-1"
+- tapOn:
+    text: "Новый игрок"
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 20000
+- tapOn:
+    id: "new-player-name"
+- eraseText
+- inputText: "Petr"
+- tapOn:
+    id: "new-player-create"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-1"
+    timeout: 15000
+- tapOn:
+    id: "seat-player-1"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "offline petr note"
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "quick-note-save"
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-1"
+    timeout: 20000
+
+# --- ONLINE снова: у Ивана notes на месте ---
+- setAirplaneMode: disabled
+- tapOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 20000
+- assertVisible: "3bet light BTN"

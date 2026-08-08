@@ -1,0 +1,73 @@
+# SC-6 (release APK / S23): лобби «Метки» → add custom player tag → close
+appId: com.aipoker.notes
+tags:
+  - sc6
+  - smoke
+  - standalone
+---
+- runFlow: subflows/launch-standalone.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+
+- assertVisible:
+    id: "lobby-player-tags"
+- tapOn:
+    id: "lobby-player-tags"
+- extendedWaitUntil:
+    visible:
+      id: "player-tag-up-fish"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "player-tag-add"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: "player-tag-new-label"
+- eraseText
+- inputText: "SmokeBluff3"
+- pressKey: Enter
+- tapOn:
+    id: "player-tag-add"
+- scrollUntilVisible:
+    element:
+      text: "SmokeBluff3"
+    direction: UP
+    timeout: 15000
+- assertVisible: "SmokeBluff3"
+- pressKey: back
+- extendedWaitUntil:
+    visible:
+      id: "player-tags-settings-close"
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: "player-tags-settings-close"
+    commands:
+      - tapOn:
+          id: "player-tags-settings-close"
+- runFlow:
+    when:
+      notVisible:
+        id: "lobby-new-table"
+    commands:
+      - pressKey: back
+- assertVisible:
+    id: "lobby-new-table"

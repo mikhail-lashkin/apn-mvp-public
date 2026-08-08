@@ -1,0 +1,10 @@
+# SC-3: добавить быстрый тег заметки «лимп» (1 tap toggle в QuickNote)
+appId: com.aipoker.notes
+---
+- scrollUntilVisible:
+    element:
+      id: "note-tag-лимп"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "note-tag-лимп"

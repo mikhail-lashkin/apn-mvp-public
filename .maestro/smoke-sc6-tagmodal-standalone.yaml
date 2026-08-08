@@ -1,0 +1,38 @@
+# SC-6 tag modal (release APK / S23): long-press seat → Цветовая метка → Fish
+appId: com.aipoker.notes
+tags:
+  - sc6
+  - standalone
+---
+- runFlow: subflows/prepare-table-standalone.yaml
+- evalScript: ${output.ts = Date.now()}
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'SC6_' + output.ts}
+- longPressOn:
+    id: "seat-player-0"
+- tapOn:
+    text: "Цветовая метка"
+- extendedWaitUntil:
+    visible:
+      id: "player-tag-fish"
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: "player-tag-unknown"
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    id: "player-tag-unknown"
+- scrollUntilVisible:
+    element:
+      id: "player-tag-fish"
+    direction: UP
+    timeout: 15000
+- tapOn:
+    id: "player-tag-fish"
+- waitForAnimationToEnd
+- assertVisible:
+    id: "seat-player-0"

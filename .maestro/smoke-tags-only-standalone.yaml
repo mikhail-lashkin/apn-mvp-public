@@ -1,0 +1,54 @@
+# Tags-only: tag without text → Save → reopen (standalone / release APK)
+# Без inputText — на S23 Maestro часто DEADLINE_EXCEEDED на erase/input
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - standalone
+  - tags-only
+---
+- runFlow: subflows/prepare-table-standalone.yaml
+
+- runFlow:
+    file: subflows/seed-nameless.yaml
+    env:
+      SEAT: "0"
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible:
+    text: "Быстрые теги"
+- scrollUntilVisible:
+    element:
+      text: "лимп"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- tapOn:
+    text: "лимп"
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible: "лимп"
+
+- tapOn:
+    id: "close-player-profile"

@@ -1,0 +1,26 @@
+appId: com.aipoker.notes
+---
+# SC-1 на release APK (S23 / USB) — без Metro; стол через «+ Новый стол»
+- runFlow: launch-standalone.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 90000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: login.yaml
+
+- runFlow: open-new-table.yaml
+
+- scrollUntilVisible:
+    element:
+      id: "reset-table-local"
+    direction: DOWN
+    timeout: 15000
+
+- runFlow: reset-app-sc1.yaml

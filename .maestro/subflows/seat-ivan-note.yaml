@@ -1,0 +1,43 @@
+appId: com.aipoker.notes
+---
+- tapOn:
+    id: "seat-empty-0"
+- tapOn: "Новый игрок"
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 15000
+- tapOn:
+    id: "new-player-name"
+- inputText: "Ivan"
+- tapOn:
+    id: "new-player-create"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 20000
+- tapOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "3bet light BTN"
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "quick-note-save"
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 20000

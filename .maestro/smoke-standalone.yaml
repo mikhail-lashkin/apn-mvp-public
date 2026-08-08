@@ -1,0 +1,34 @@
+# P0 Smoke (release APK, embedded API URL — без Metro)
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - p0
+  - standalone
+---
+- runFlow: subflows/prepare-table-standalone.yaml
+
+- tapOn:
+    id: "seat-empty-0"
+- extendedWaitUntil:
+    visible:
+      text: "Свободное место"
+    timeout: 10000
+# Android Alert: максимум 3 кнопки, «Отмена» часто пропадает — закрываем Back
+- pressKey: back
+- extendedWaitUntil:
+    notVisible:
+      text: "Свободное место"
+    timeout: 10000
+    optional: true
+# Если Back не закрыл Alert — уходим через «Из списка» и Back из пикера
+- runFlow:
+    when:
+      visible:
+        text: "Свободное место"
+    commands:
+      - tapOn:
+          text: "Из списка"
+      - pressKey: back
+
+- assertVisible:
+    id: "seat-empty-0"

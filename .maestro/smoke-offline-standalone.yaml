@@ -1,0 +1,85 @@
+# Offline-first (release / S23): online Ivan+note → airplane Petr+note → online Ivan note intact
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - offline
+  - standalone
+---
+- runFlow: subflows/prepare-table-standalone.yaml
+- setAirplaneMode: disabled
+
+# --- ONLINE: Ivan + note ---
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: "Ivan"
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "3bet light BTN"
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 40
+- tapOn:
+    id: "quick-note-save"
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 60000
+- assertVisible:
+    id: "seat-player-0"
+
+# --- AIRPLANE: Petr + note ---
+- setAirplaneMode: enabled
+- waitForAnimationToEnd
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "1"
+      PLAYER_NAME: "Petr"
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "1"
+
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "offline petr note"
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 40
+- tapOn:
+    id: "quick-note-save"
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 60000
+- assertVisible:
+    id: "seat-player-1"
+
+# --- ONLINE: Ivan note still there ---
+- setAirplaneMode: disabled
+- waitForAnimationToEnd
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+- assertVisible: "3bet light BTN"
+- tapOn:
+    id: "close-player-profile"

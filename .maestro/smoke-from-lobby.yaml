@@ -1,0 +1,72 @@
+# Smoke от лобби: стол → Ivan → заметка (dev-client APK)
+# Pref: эмулятор, APK com.aipoker.notes, Metro --dev-client, backend :8000
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - from-lobby
+---
+- launchApp:
+    appId: "com.aipoker.notes"
+    clearState: false
+    stopApp: false
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- runFlow: subflows/open-new-table.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 30000
+
+- tapOn:
+    id: "seat-empty-0"
+
+- tapOn: "Новый игрок"
+
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 15000
+
+- tapOn:
+    id: "new-player-name"
+- inputText: "Ivan"
+
+- tapOn:
+    id: "new-player-create"
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 20000
+
+- tapOn:
+    id: "seat-player-0"
+
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+
+- tapOn:
+    id: "quick-note-text"
+- inputText: "3bet light BTN"
+
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 20000

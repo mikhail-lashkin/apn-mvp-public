@@ -1,0 +1,34 @@
+appId: com.aipoker.notes
+---
+- tapOn:
+    id: "login-email"
+- eraseText
+- inputText: "test@test.com"
+- tapOn:
+    id: "login-password"
+- eraseText
+- inputText: "test123456"
+# Enter = onSubmitEditing на password (кнопка часто под клавиатурой, testID не в дереве)
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 20000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    commands:
+      - hideKeyboard
+      - scrollUntilVisible:
+          element:
+            text: "Войти"
+          direction: DOWN
+          timeout: 15000
+      - tapOn:
+          text: "Войти"
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000

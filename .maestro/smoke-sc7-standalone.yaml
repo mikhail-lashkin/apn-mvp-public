@@ -1,0 +1,69 @@
+# SC-7 (release APK / S23): лобби «Теги» → add custom note tag → close
+appId: com.aipoker.notes
+tags:
+  - sc7
+  - smoke
+  - standalone
+---
+- runFlow: subflows/launch-standalone.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-note-tags"
+    timeout: 45000
+
+- tapOn:
+    id: "lobby-note-tags"
+
+- extendedWaitUntil:
+    visible:
+      id: "note-tags-settings-close"
+    timeout: 30000
+
+- scrollUntilVisible:
+    element:
+      id: "note-tag-new-label"
+    direction: DOWN
+    timeout: 25000
+    visibilityPercentage: 40
+
+- tapOn:
+    id: "note-tag-new-label"
+- eraseText
+- inputText: "SmokeTell7"
+- pressKey: Enter
+
+- scrollUntilVisible:
+    element:
+      id: "note-tag-add"
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 40
+- tapOn:
+    id: "note-tag-add"
+
+- scrollUntilVisible:
+    element:
+      text: "SmokeTell7"
+    direction: UP
+    timeout: 15000
+- assertVisible: "SmokeTell7"
+
+- tapOn:
+    id: "note-tags-settings-close"
+- assertVisible:
+    id: "lobby-new-table"
+- assertVisible:
+    id: "lobby-note-tags"

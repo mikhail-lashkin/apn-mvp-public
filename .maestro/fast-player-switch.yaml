@@ -1,0 +1,61 @@
+# P1/P0: быстрое переключение игроков — текст A не теряется
+appId: com.aipoker.notes
+tags:
+  - p0
+---
+- evalScript: ${output.ts = Date.now()}
+- runFlow: subflows/prepare-table.yaml
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'SWA_' + output.ts}
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "1"
+      PLAYER_NAME: ${'SWB_' + output.ts}
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "Лимп с MP — черновик"
+
+- tapOn:
+    id: "player-picker-toggle"
+- tapOn:
+    text: ${'SWB_' + output.ts}
+
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+
+- tapOn:
+    id: "player-picker-toggle"
+- tapOn:
+    text: ${'SWA_' + output.ts}
+
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+
+- assertVisible: "Лимп с MP — черновик"
+
+- tapOn:
+    id: "close-player-profile"
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible: "Лимп с MP — черновик"

@@ -1,0 +1,19 @@
+appId: com.aipoker.notes
+---
+- extendedWaitUntil:
+    visible:
+      id: "reset-table-local"
+    timeout: 45000
+- scrollUntilVisible:
+    element:
+      id: "reset-table-local"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: "reset-table-local"
+- tapOn:
+    text: "Очистить"
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 30000

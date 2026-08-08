@@ -1,0 +1,63 @@
+# P0: системная Back — модалки закрываются, приложение не вылетает
+appId: com.aipoker.notes
+tags:
+  - p0
+---
+- evalScript: ${output.ts = Date.now()}
+- runFlow: subflows/prepare-table.yaml
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'BK_' + output.ts}
+
+# QuickNote → Back → стол
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- pressKey: back
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 15000
+
+# NewPlayerSheet → Back
+- tapOn:
+    id: "seat-empty-1"
+- tapOn:
+    text: "Новый игрок"
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 15000
+
+- pressKey: back
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-1"
+    timeout: 15000
+
+# TagModal (long-press → alert → метка) → Back
+- longPressOn:
+    id: "seat-player-0"
+- tapOn:
+    text: "Цветовая метка"
+- extendedWaitUntil:
+    visible:
+      id: "player-tag-fish"
+    timeout: 15000
+
+- pressKey: back
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 15000
+
+- assertVisible:
+    id: "seat-player-0"

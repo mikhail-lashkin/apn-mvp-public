@@ -1,0 +1,67 @@
+# SC-1 (release APK / S23): 8-max $1/2, пустые слоты, смешанная посадка
+appId: com.aipoker.notes
+tags:
+  - sc1
+  - smoke
+  - standalone
+---
+- runFlow: subflows/prepare-table-sc1-standalone.yaml
+
+- assertVisible:
+    id: "table-stakes"
+- assertVisible:
+    text: "$1/2"
+- assertVisible:
+    id: "table-header"
+
+- assertVisible:
+    id: "seat-player-0"
+- assertVisible:
+    id: "seat-empty-1"
+- assertVisible:
+    id: "seat-empty-2"
+- assertVisible:
+    id: "seat-player-3"
+- assertVisible:
+    id: "seat-player-4"
+- assertVisible:
+    text: "HERO"
+- assertVisible:
+    id: "seat-empty-5"
+- assertVisible:
+    id: "seat-empty-6"
+- assertVisible:
+    id: "seat-empty-7"
+
+- assertVisible:
+    text: "Ivan"
+- assertVisible:
+    text: "Petr"
+
+- tapOn:
+    id: "seat-empty-1"
+- assertVisible:
+    text: "Свободное место"
+- pressKey: back
+- runFlow:
+    when:
+      visible:
+        text: "Свободное место"
+    commands:
+      - tapOn:
+          text: "Из списка"
+      - pressKey: back
+- assertVisible:
+    id: "seat-empty-1"
+
+- tapOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+- tapOn:
+    id: "close-player-profile"
+
+- assertVisible:
+    id: "seat-player-0"

@@ -1,0 +1,46 @@
+# P0: заметка RU+EN + тег лимп → Save → reopen → данные на месте
+appId: com.aipoker.notes
+tags:
+  - p0
+---
+- evalScript: ${output.ts = Date.now()}
+- runFlow: subflows/prepare-table.yaml
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'MP_' + output.ts}
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "Лимп с MP / 3bet light BTN"
+
+- runFlow: subflows/add-tag-fish.yaml
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible: "Лимп с MP / 3bet light BTN"
+- assertVisible: "лимп"

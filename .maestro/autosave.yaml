@@ -1,0 +1,39 @@
+# P0 save-on-close: текст без Save → close → reopen → текст сохранён
+appId: com.aipoker.notes
+tags:
+  - p0
+  - save-on-close
+---
+- evalScript: ${output.ts = Date.now()}
+- runFlow: subflows/prepare-table.yaml
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'AS_' + output.ts}
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: ${'MAESTRO_AUTOSAVE_' + output.ts}
+
+- tapOn:
+    id: "close-player-profile"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 30000
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible: ${'MAESTRO_AUTOSAVE_' + output.ts}

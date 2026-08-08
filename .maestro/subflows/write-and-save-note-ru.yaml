@@ -1,0 +1,25 @@
+# RU-заметка: тело ASCII (Maestro 2.6 без Unicode input),
+# кириллица — тег «лимп» (chip). QuickNote уже открыт.
+# Не copyTextFrom с chip id — вставляет "note-tag-", не "лимп".
+appId: com.aipoker.notes
+---
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "RU limp / wide 3bet SC4"
+
+- runFlow: add-tag-fish.yaml
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 50
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000

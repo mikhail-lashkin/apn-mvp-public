@@ -1,0 +1,41 @@
+appId: com.aipoker.notes
+---
+# Сброс → пустой 8-max, посадка Ivan/Petr (ASCII — стабильнее IME в Maestro)
+- extendedWaitUntil:
+    visible:
+      id: "reset-table-local"
+    timeout: 45000
+- scrollUntilVisible:
+    element:
+      id: "reset-table-local"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: "reset-table-local"
+- tapOn:
+    text: "Очистить"
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 30000
+
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: "Ivan"
+
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "3"
+      PLAYER_NAME: "Petr"
+
+- assertVisible:
+    id: "seat-player-0"
+- assertVisible:
+    id: "seat-empty-1"
+- assertVisible:
+    text: "Ivan"
+- assertVisible:
+    text: "Petr"

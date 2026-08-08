@@ -1,0 +1,38 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    gcc \
+    postgresql-client \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Копирование requirements
+COPY requirements.txt .
+
+# Установка Python зависимостей
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копирование кода приложения
+COPY . .
+
+# Создание структуры src для импортов
+RUN mkdir -p src/backend && \
+    cp -r db models routers services utils middleware tests src/backend/ && \
+    cp main.py src/backend/ && \
+    cp alembic.ini src/backend/ && \
+    cp -r alembic src/backend/
+
+WORKDIR /app/src/backend
+
+# Переменные окружения
+ENV PYTHONPATH=/app/src
+ENV PYTHONUNBUFFERED=1
+
+# Expose port
+EXPOSE 8000
+
+# Команда по умолчанию
+CMD ["uvicorn", "src.backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

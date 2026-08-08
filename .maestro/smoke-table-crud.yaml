@@ -1,0 +1,66 @@
+# CRUD стола: create → seat → ColorSystem tag → note → delete
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - table-crud
+---
+- runFlow: subflows/prepare-new-table.yaml
+
+- evalScript: ${output.ts = Date.now()}
+
+# 1) Посадка игрока
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'CRUD_' + output.ts}
+
+# 2) Цветовая метка (ColorSystem)
+- longPressOn:
+    id: "seat-player-0"
+- tapOn:
+    text: "Цветовая метка"
+- extendedWaitUntil:
+    visible:
+      id: "player-tag-fish"
+    timeout: 20000
+- tapOn:
+    id: "player-tag-fish"
+- waitForAnimationToEnd
+- assertVisible:
+    id: "seat-player-0"
+
+# 3) Заметка
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+- runFlow:
+    file: subflows/write-and-save-note.yaml
+    env:
+      NOTE_TEXT: ${'crud note ' + output.ts}
+
+- assertVisible:
+    id: "seat-player-0"
+
+# 4) Удаление сохранённого стола
+- scrollUntilVisible:
+    element:
+      id: "table-delete"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: "table-delete"
+- extendedWaitUntil:
+    visible: "Удалить стол?"
+    timeout: 10000
+- tapOn:
+    text: "Удалить"
+
+# обратно в лобби
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+- assertVisible:
+    id: "lobby-new-table"

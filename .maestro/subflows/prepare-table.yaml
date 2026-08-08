@@ -1,0 +1,25 @@
+appId: com.aipoker.notes
+---
+- runFlow: launch-dev-client.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: login.yaml
+
+- runFlow: open-new-table.yaml
+
+- scrollUntilVisible:
+    element:
+      id: "reset-table-local"
+    direction: DOWN
+    timeout: 15000
+
+- runFlow: reset-app.yaml

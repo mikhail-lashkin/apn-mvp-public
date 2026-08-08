@@ -1,0 +1,6 @@
+# Maestro workspace config (APN-MVP)
+# ui-baseline — отдельный pack, не в npm run e2e
+flows:
+  - '*'
+excludeTags:
+  - ui-baseline

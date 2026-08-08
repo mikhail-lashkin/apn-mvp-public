@@ -1,0 +1,83 @@
+# SC-7: лобби «Теги» → add custom note tag → close
+appId: com.aipoker.notes
+tags:
+  - sc7
+  - smoke
+---
+- runFlow: subflows/launch-dev-client.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-note-tags"
+    timeout: 45000
+
+- tapOn:
+    id: "lobby-note-tags"
+
+- extendedWaitUntil:
+    visible:
+      id: "note-tags-settings-close"
+    timeout: 30000
+
+- scrollUntilVisible:
+    element:
+      id: "note-tag-add"
+    direction: DOWN
+    timeout: 20000
+
+- scrollUntilVisible:
+    element:
+      id: "note-tag-new-label"
+    direction: DOWN
+    timeout: 20000
+
+- tapOn:
+    id: "note-tag-new-label"
+- eraseText
+- inputText: "SmokeTell7"
+- pressKey: Enter
+- tapOn:
+    id: "note-tag-add"
+
+- scrollUntilVisible:
+    element:
+      text: "SmokeTell7"
+    direction: UP
+    timeout: 15000
+- assertVisible: "SmokeTell7"
+
+- pressKey: back
+- extendedWaitUntil:
+    visible:
+      id: "note-tags-settings-close"
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: "note-tags-settings-close"
+    commands:
+      - tapOn:
+          id: "note-tags-settings-close"
+- runFlow:
+    when:
+      notVisible:
+        id: "lobby-new-table"
+    commands:
+      - pressKey: back
+- assertVisible:
+    id: "lobby-new-table"
+- assertVisible:
+    id: "lobby-note-tags"

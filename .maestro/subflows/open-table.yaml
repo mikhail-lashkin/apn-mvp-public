@@ -1,0 +1,19 @@
+appId: com.aipoker.notes
+---
+- runFlow: open-new-table.yaml
+- scrollUntilVisible:
+    element:
+      id: "reset-table-local"
+    direction: DOWN
+    timeout: 10000
+    optional: true
+- tapOn:
+    id: "reset-table-local"
+    optional: true
+- tapOn:
+    text: "Очистить"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 30000

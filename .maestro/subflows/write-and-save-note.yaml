@@ -1,0 +1,25 @@
+# Env: NOTE_TEXT (ASCII only — Maestro 2.6.1). QuickNote уже открыт.
+# Пишет текст, тег «лимп», Save, ждёт закрытия модалки.
+# Не вызывать hideKeyboard — Back закрывает Modal.
+appId: com.aipoker.notes
+---
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: ${NOTE_TEXT}
+
+- runFlow: add-tag-fish.yaml
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 50
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000

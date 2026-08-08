@@ -1,0 +1,9 @@
+appId: com.aipoker.notes
+---
+# Env: SEAT (default 0)
+- tapOn:
+    id: "seat-player-${SEAT}"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 20000

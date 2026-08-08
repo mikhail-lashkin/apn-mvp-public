@@ -1,0 +1,54 @@
+# MB-13: Скрыть игрока (soft-hide) из меню места
+# Без inputText — S23 Maestro DEADLINE на erase/input
+appId: com.aipoker.notes
+tags:
+  - mb13
+  - smoke
+  - standalone
+---
+- runFlow: subflows/prepare-table-standalone.yaml
+
+# Посадка «Без имени»
+- tapOn:
+    id: "seat-empty-0"
+- extendedWaitUntil:
+    visible:
+      id: "seat-menu-nameless"
+    timeout: 10000
+- tapOn:
+    id: "seat-menu-nameless"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 15000
+
+# Long-press → Скрыть игрока
+- longPressOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "seat-menu-hide-player"
+    timeout: 10000
+- assertVisible:
+    id: "seat-menu-clear"
+- tapOn:
+    id: "seat-menu-hide-player"
+
+# Confirm Alert
+- extendedWaitUntil:
+    visible: "Скрыть игрока?"
+    timeout: 10000
+- tapOn:
+    text: "Скрыть"
+
+# Место пустое + undo-баннер
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "hide-player-undo-banner"
+    timeout: 5000
+- assertVisible:
+    id: "hide-player-undo"

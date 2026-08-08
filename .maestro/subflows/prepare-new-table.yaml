@@ -1,0 +1,43 @@
+# Login → «+ Новый стол» → SetupSheet Save → экран стола
+appId: com.aipoker.notes
+---
+- runFlow: launch-dev-client.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+
+- tapOn:
+    id: "lobby-new-table"
+
+- extendedWaitUntil:
+    visible:
+      id: "setup-sheet-save"
+    timeout: 20000
+
+# дефолт SetupSheet: 8-max · $1/2 · hero CO
+- tapOn:
+    id: "setup-sheet-save"
+
+- extendedWaitUntil:
+    visible:
+      id: "reset-table-local"
+    timeout: 60000
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 20000

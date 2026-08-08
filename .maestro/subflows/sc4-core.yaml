@@ -1,0 +1,154 @@
+# SC-4 ядро (после prepare + reset на 8-max):
+# полная посадка → RU/EN заметки → смена игрока → reopen → короткий offline
+# Требует: output.ts уже задан evalScript в вызывающем flow.
+appId: com.aipoker.notes
+---
+# --- Полная посадка: HERO (seat 4) + 7 игроков ---
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'RU' + output.sid}
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "1"
+      PLAYER_NAME: ${'EN' + output.sid}
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "2"
+      PLAYER_NAME: ${'P2' + output.sid}
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "3"
+      PLAYER_NAME: ${'P3' + output.sid}
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "5"
+      PLAYER_NAME: ${'P5' + output.sid}
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "6"
+      PLAYER_NAME: ${'P6' + output.sid}
+- runFlow:
+    file: seed-test-data.yaml
+    env:
+      SEAT: "7"
+      PLAYER_NAME: ${'P7' + output.sid}
+
+- assertVisible:
+    id: "seat-player-0"
+- assertVisible:
+    id: "seat-player-1"
+- assertVisible:
+    id: "seat-player-2"
+- assertVisible:
+    id: "seat-player-3"
+- assertVisible:
+    id: "seat-player-4"
+- assertVisible:
+    text: "HERO"
+- assertVisible:
+    id: "seat-player-5"
+- assertVisible:
+    id: "seat-player-6"
+- assertVisible:
+    id: "seat-player-7"
+
+# --- Seat 0: RU (paste Cyrillic) + тег → Save → reopen ---
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "0"
+- runFlow: write-and-save-note-ru.yaml
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "0"
+# Кириллица: тег «лимп» без кракозябр + ASCII тело
+- assertVisible: "RU limp / wide 3bet SC4"
+- assertVisible: "лимп"
+- tapOn:
+    id: "close-player-profile"
+
+# --- Seat 1: EN + тег → Save → reopen ---
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "1"
+- runFlow:
+    file: write-and-save-note.yaml
+    env:
+      NOTE_TEXT: "Limps MP / wide 3bet BTN"
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "1"
+- assertVisible: "Limps MP / wide 3bet BTN"
+- assertVisible: "лимп"
+- tapOn:
+    id: "close-player-profile"
+
+# --- Смена игрока на seat 0: старая RU-заметка не у нового ---
+- runFlow:
+    file: replace-seat-new-player.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'NEW' + output.sid}
+
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "0"
+- runFlow:
+    file: write-and-save-note.yaml
+    env:
+      NOTE_TEXT: "New player on seat 0"
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "0"
+- assertVisible: "New player on seat 0"
+- assertVisible: "лимп"
+# EN-текст старого seat 1 не должен быть у NEW_*
+- assertNotVisible: "Limps MP / wide 3bet BTN"
+- tapOn:
+    id: "close-player-profile"
+
+# EN-игрок на seat 1 всё ещё со своей заметкой
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "1"
+- assertVisible: "Limps MP / wide 3bet BTN"
+- tapOn:
+    id: "close-player-profile"
+
+# --- Offline → заметка → online → reopen (FB-6 очередь) ---
+- setAirplaneMode: enabled
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "2"
+- runFlow:
+    file: write-and-save-note.yaml
+    env:
+      NOTE_TEXT: "Offline note P2 sc4"
+- setAirplaneMode: disabled
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-2"
+    timeout: 20000
+# Дать SyncService время слить очередь
+- waitForAnimationToEnd
+- runFlow:
+    file: open-player.yaml
+    env:
+      SEAT: "2"
+- assertVisible: "Offline note P2 sc4"
+- tapOn:
+    id: "close-player-profile"

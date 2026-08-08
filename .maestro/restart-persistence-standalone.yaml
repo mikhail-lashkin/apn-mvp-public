@@ -1,0 +1,77 @@
+# Restart persistence (release / S23): note survives stopApp + launch
+appId: com.aipoker.notes
+tags:
+  - p0
+  - standalone
+---
+- evalScript: ${output.ts = Date.now()}
+- runFlow: subflows/prepare-table-standalone.yaml
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'RP_' + output.ts}
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "persist after restart BTN"
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 40
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
+
+- stopApp:
+    appId: "com.aipoker.notes"
+
+- runFlow: subflows/launch-standalone.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+
+- tapOn:
+    id: "lobby-saved-table-0"
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 45000
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible: "persist after restart BTN"
+- tapOn:
+    id: "close-player-profile"

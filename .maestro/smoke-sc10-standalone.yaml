@@ -1,0 +1,94 @@
+# SC-10 combo (S23 standalone): seat menu + nameless QuickNote + clear seat
+# Без inputText — S23 Maestro DEADLINE на erase/input
+appId: com.aipoker.notes
+tags:
+  - sc10
+  - smoke
+  - standalone
+---
+- runFlow: subflows/prepare-table-standalone.yaml
+
+# --- 10.5: пустое место → меню с Отмена ---
+- tapOn:
+    id: "seat-empty-0"
+- extendedWaitUntil:
+    visible:
+      id: "seat-menu-cancel"
+    timeout: 10000
+- assertVisible:
+    id: "seat-menu-nameless"
+- assertVisible:
+    id: "seat-menu-new-player"
+- tapOn:
+    id: "seat-menu-cancel"
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible:
+      id: "seat-menu-nameless"
+    timeout: 10000
+
+# --- посадка Без имени (меню, не NewPlayerSheet) ---
+- tapOn:
+    id: "seat-empty-0"
+- extendedWaitUntil:
+    visible:
+      id: "seat-menu-nameless"
+    timeout: 10000
+- tapOn:
+    id: "seat-menu-nameless"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 30000
+
+# --- nameless QuickNote: заголовок / picker не «мёртвый» ---
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+# title/picker содержат «Без имени · N» (не exact «Без имени»)
+- assertVisible:
+    text: ".*Без имени.*"
+- assertVisible:
+    id: "player-picker-toggle"
+- assertVisible:
+    text: "Быстрые теги"
+- scrollUntilVisible:
+    element:
+      text: "лимп"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- tapOn:
+    text: "лимп"
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- tapOn:
+    id: "quick-note-save"
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
+
+# --- 10.4: long-press → Освободить место ---
+- longPressOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "seat-menu-clear"
+    timeout: 10000
+- assertVisible:
+    id: "seat-menu-cancel"
+- tapOn:
+    id: "seat-menu-clear"
+- extendedWaitUntil:
+    visible:
+      id: "seat-empty-0"
+    timeout: 15000

@@ -1,0 +1,75 @@
+# SC-10.2 / 10.3: открытие rename в справочниках (без inputText — только видимость поля)
+appId: com.aipoker.notes
+tags:
+  - sc10
+  - smoke
+  - standalone
+---
+- runFlow: subflows/launch-standalone.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-note-tags"
+    timeout: 45000
+
+# --- Note tags rename field ---
+- tapOn:
+    id: "lobby-note-tags"
+- extendedWaitUntil:
+    visible:
+      id: "note-tags-settings-close"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "note-tag-rename-лимп"
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 40
+- tapOn:
+    id: "note-tag-rename-лимп"
+- extendedWaitUntil:
+    visible:
+      id: "note-tag-edit-лимп"
+    timeout: 10000
+- tapOn:
+    id: "note-tags-settings-close"
+
+# --- Player tags rename field ---
+- extendedWaitUntil:
+    visible:
+      id: "lobby-player-tags"
+    timeout: 20000
+- tapOn:
+    id: "lobby-player-tags"
+- extendedWaitUntil:
+    visible:
+      id: "player-tags-settings-close"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "player-tag-rename-fish"
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 40
+- tapOn:
+    id: "player-tag-rename-fish"
+- extendedWaitUntil:
+    visible:
+      id: "player-tag-edit-fish"
+    timeout: 10000
+- tapOn:
+    id: "player-tags-settings-close"
+- assertVisible:
+    id: "lobby-new-table"

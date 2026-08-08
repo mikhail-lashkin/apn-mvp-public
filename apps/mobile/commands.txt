@@ -1,0 +1,18 @@
+# AI Poker Notes - Android Emulator Commands
+# Скопируй и вставь команды в PowerShell
+
+# Переход в папку проекта
+cd "D:\AI Poker Notes\apn-mvp\apps\mobile"
+
+# Проверка эмулятора
+adb devices
+
+# Установка зависимостей (если нужно)
+npm install
+
+# Запуск Expo на Android
+npx expo start --android --clear
+
+# Альтернативные команды:
+# npx expo start --tunnel
+# npx expo start --port 8083

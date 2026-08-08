@@ -1,0 +1,26 @@
+# FastAPI и ASGI сервер
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+
+# База данных
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.10
+alembic==1.13.1
+
+# Аутентификация и безопасность
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.6
+
+# Валидация данных
+pydantic==2.11.7
+pydantic[email]==2.11.7
+
+# Переменные окружения
+python-dotenv==1.1.1
+
+# Дополнительные утилиты
+python-dateutil==2.8.2
+slowapi==0.1.9
+httpx==0.28.1

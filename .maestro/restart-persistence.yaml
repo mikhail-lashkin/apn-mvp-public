@@ -1,0 +1,78 @@
+# P0: данные переживают stopApp + launchApp
+appId: com.aipoker.notes
+tags:
+  - p0
+---
+- evalScript: ${output.ts = Date.now()}
+- runFlow: subflows/prepare-table.yaml
+
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'RP_' + output.ts}
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+- inputText: "Лимп с MP / 3bet light BTN"
+
+- runFlow: subflows/add-tag-fish.yaml
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "quick-note-save"
+
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
+
+- stopApp:
+    appId: "com.aipoker.notes"
+
+- runFlow: subflows/launch-dev-client.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 60000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 45000
+    optional: true
+
+- tapOn:
+    id: "lobby-saved-table-0"
+    optional: true
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 45000
+
+- runFlow:
+    file: subflows/open-player.yaml
+    env:
+      SEAT: "0"
+
+- assertVisible: "Лимп с MP / 3bet light BTN"
+- assertVisible: "лимп"

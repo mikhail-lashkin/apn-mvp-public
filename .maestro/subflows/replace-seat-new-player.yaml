@@ -1,0 +1,38 @@
+# Env: SEAT, PLAYER_NAME — long-press → «Заменить — новый» → создать игрока
+appId: com.aipoker.notes
+---
+- longPressOn:
+    id: "seat-player-${SEAT}"
+- tapOn:
+    text: "Заменить — новый"
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 15000
+- tapOn:
+    id: "new-player-name"
+- eraseText
+- inputText: ${PLAYER_NAME}
+- assertVisible: ${PLAYER_NAME}
+- waitForAnimationToEnd
+- pressKey: Enter
+- runFlow:
+    when:
+      visible:
+        id: "new-player-create"
+    commands:
+      - tapOn:
+          id: "new-player-create"
+- runFlow:
+    when:
+      visible:
+        id: "new-player-create"
+    commands:
+      - tapOn:
+          text: "Создать"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-${SEAT}"
+    timeout: 30000
+- assertVisible:
+    text: ${PLAYER_NAME}

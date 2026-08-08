@@ -1,0 +1,60 @@
+# Node / React / Expo
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.expo/
+.expo-shared/
+dist/
+build/
+.web-build/
+*.expo
+
+# TypeScript
+*.tsbuildinfo
+
+# React Native / signing
+android/
+ios/
+*.apk
+*.aab
+*.jks
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+apps/mobile/credentials/keystore.properties
+apps/mobile/credentials/*.keystore
+
+# Logs / caches
+logs
+*.log
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local API target (may point to private hosts)
+scripts/api-target.env
+
+# Local artifacts
+artifacts/
+*.jsonl
+*.bak
+*.swp
+*.swo
+*.orig

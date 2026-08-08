@@ -1,0 +1,193 @@
+# FG-6: baseline screenshots → artifacts/ui-baseline/
+# Не входит в P0 pack (tag ui-baseline + excludeTags в config.yaml).
+# Запуск: npm run e2e:ui-baseline
+appId: com.aipoker.notes
+tags:
+  - ui-baseline
+---
+- setAirplaneMode: disabled
+
+- runFlow: subflows/launch-dev-client.yaml
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/00-launch
+    label: "00 launch (login or Metro shell)"
+
+# --- Login / Lobby ---
+- extendedWaitUntil:
+    visible:
+      id: "login-email"
+    timeout: 120000
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        id: "login-email"
+    file: subflows/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 90000
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/01-table-list
+    label: "01 lobby table list"
+
+# --- SC-6: PlayerTagsSettingsSheet (лобби «Метки») ---
+- assertVisible:
+    id: "lobby-player-tags"
+- tapOn:
+    id: "lobby-player-tags"
+- extendedWaitUntil:
+    visible:
+      id: "player-tags-settings-close"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/11-player-tags-settings
+    label: "11 SC-6 PlayerTagsSettingsSheet"
+
+- tapOn:
+    id: "player-tags-settings-close"
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 20000
+
+# --- SC-7: NoteTagsSettingsSheet (лобби «Теги») ---
+- assertVisible:
+    id: "lobby-note-tags"
+- tapOn:
+    id: "lobby-note-tags"
+- extendedWaitUntil:
+    visible:
+      id: "note-tags-settings-close"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/12-note-tags-settings
+    label: "12 SC-7 NoteTagsSettingsSheet"
+
+- tapOn:
+    id: "note-tags-settings-close"
+- extendedWaitUntil:
+    visible:
+      id: "lobby-new-table"
+    timeout: 20000
+
+# --- Table (8-max via + Новый стол) ---
+- runFlow: subflows/open-new-table.yaml
+
+- runFlow: subflows/reset-app.yaml
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/02-table-screen
+    label: "02 table screen after reset"
+
+# --- Empty seat dialog ---
+- tapOn:
+    id: "seat-empty-0"
+
+- extendedWaitUntil:
+    visible: "Новый игрок"
+    timeout: 15000
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/03-empty-seat
+    label: "03 empty seat dialog"
+
+- tapOn:
+    text: "Отмена"
+    optional: true
+
+# --- Player added ---
+- evalScript: ${output.ts = Date.now()}
+- runFlow:
+    file: subflows/seed-test-data.yaml
+    env:
+      SEAT: "0"
+      PLAYER_NAME: ${'BL_' + output.ts}
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/04-player-added
+    label: "04 player seated"
+
+# --- Player type (ColorSystem TagModal) ---
+- longPressOn:
+    id: "seat-player-0"
+
+- tapOn:
+    text: "Цветовая метка"
+
+- extendedWaitUntil:
+    visible:
+      id: "player-tag-fish"
+    timeout: 20000
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/05-player-type
+    label: "05 player type TagModal"
+
+- tapOn:
+    id: "player-tag-fish"
+
+- waitForAnimationToEnd
+
+# --- QuickNote ---
+- tapOn:
+    id: "seat-player-0"
+
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/06-quick-note-open
+    label: "06 QuickNote open"
+
+- runFlow:
+    file: subflows/write-and-save-note.yaml
+    env:
+      NOTE_TEXT: "FG6 baseline note"
+
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 30000
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/07-note-saved
+    label: "07 note saved on table"
+
+# --- Offline (airplane). SyncStatus UI в Current нет — кадр стола без сети. ---
+- setAirplaneMode: enabled
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/08-offline
+    label: "08 offline (airplane, no Offline banner UI)"
+
+# --- Reconnect. Dedicated Syncing UI отсутствует (FG-5 gap). ---
+- setAirplaneMode: disabled
+
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/09-syncing
+    label: "09 post-offline reconnect (no SyncStatus component)"
+
+# --- sync-error: отдельного UI нет — кадр как proof-of-gap для FG-7. ---
+- waitForAnimationToEnd
+- takeScreenshot:
+    path: artifacts/ui-baseline/10-sync-error
+    label: "10 placeholder: SyncError UI not in Current code"

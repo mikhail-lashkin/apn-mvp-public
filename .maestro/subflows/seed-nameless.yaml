@@ -1,0 +1,16 @@
+# Посадка «Без имени» через seat menu (SC-10 bottom sheet)
+appId: com.aipoker.notes
+---
+# Env: SEAT (default 0)
+- tapOn:
+    id: "seat-empty-${SEAT}"
+- extendedWaitUntil:
+    visible:
+      id: "seat-menu-nameless"
+    timeout: 10000
+- tapOn:
+    id: "seat-menu-nameless"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-${SEAT}"
+    timeout: 30000

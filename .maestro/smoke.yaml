@@ -1,0 +1,20 @@
+# P0 Smoke: login → стол → tap seat → нет crash
+appId: com.aipoker.notes
+tags:
+  - smoke
+  - p0
+---
+- runFlow: subflows/prepare-table.yaml
+
+- tapOn:
+    id: "seat-empty-0"
+# SC-10: bottom sheet меню места (не Alert) — id стабильнее кириллицы в Maestro на Windows
+- tapOn:
+    id: "seat-menu-cancel"
+    optional: true
+- tapOn:
+    id: "new-player-cancel"
+    optional: true
+
+- assertVisible:
+    id: "seat-empty-0"

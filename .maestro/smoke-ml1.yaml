@@ -1,0 +1,77 @@
+# ML-1: seat player → note → AI recommendation
+appId: com.aipoker.notes
+tags:
+  - ml1
+  - smoke
+---
+- runFlow: subflows/prepare-table.yaml
+
+- tapOn:
+    id: "seat-empty-0"
+- tapOn:
+    id: "seat-menu-new-player"
+- extendedWaitUntil:
+    visible:
+      id: "new-player-name"
+    timeout: 15000
+- tapOn:
+    id: "new-player-name"
+- inputText: "ML1Bot"
+- tapOn:
+    id: "new-player-create"
+- extendedWaitUntil:
+    visible:
+      id: "seat-player-0"
+    timeout: 20000
+
+- tapOn:
+    id: "seat-player-0"
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-text"
+    timeout: 15000
+- tapOn:
+    id: "quick-note-text"
+- eraseText
+# ASCII only — Maestro Windows encoding
+- inputText: "opens 18pct UTG, value 3bet, folds to 4bet"
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-recommendation"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 40
+- tapOn:
+    id: "quick-note-recommendation"
+
+# LLM ~15-40s; result card may be below fold — scroll after load
+- extendedWaitUntil:
+    visible:
+      id: "quick-note-rec-result"
+    timeout: 90000
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: "quick-note-rec-result"
+    direction: DOWN
+    timeout: 90000
+    visibilityPercentage: 30
+- assertVisible:
+    id: "quick-note-rec-result"
+- assertVisible:
+    id: "quick-note-rec-text"
+- assertVisible:
+    id: "quick-note-rec-meta"
+
+- scrollUntilVisible:
+    element:
+      id: "quick-note-save"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: "quick-note-save"
+- extendedWaitUntil:
+    notVisible:
+      id: "quick-note-text"
+    timeout: 45000
