@@ -6,7 +6,8 @@
 
 # AI Poker Notes (APN-MVP)
 
-**Status:** `public alpha`  
+**Status:** [`public alpha` / `v0.1.0-alpha`](https://github.com/mikhail-lashkin/apn-mvp-public/releases/tag/v0.1.0-alpha)  
+**Репозиторий:** [mikhail-lashkin/apn-mvp-public](https://github.com/mikhail-lashkin/apn-mvp-public)  
 **Стек:** Expo 54 / React Native · FastAPI · PostgreSQL · offline sync · hybrid recommendations
 
 Мобильное приложение для live-покера: заметки по оппонентам за столом, цветовые метки (ColorSystem), офлайн-очередь синхронизации и опциональные hybrid-рекомендации (rule map + LLM).
