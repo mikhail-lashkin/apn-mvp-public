@@ -13,18 +13,38 @@
 
 **Продуктовый UI — только mobile** (`apps/mobile/`).
 
+> Полевой прогон **2026-07-25** (реальный стол / казино): критического блокера не было; найденные требования ушли в backlog, а не в скрытый scope alpha. Подробнее: [`docs/demo/README.md`](docs/demo/README.md).
+
 ---
 
 ## Problem
 
 За живым столом нужно быстро фиксировать наблюдения по игрокам и возвращаться к ним между раздачами — без тяжёлого desktop-workflow и без обязательного облака.
 
-Public alpha показывает воспроизводимый контур:
+Ограничения live-игры: мало времени между раздачами, одна рука занята картами/фишками, сеть может пропасть, нельзя тащить laptop-UX.
 
-1. local backend (Docker) + Expo mobile;
-2. стол → рассадка → QuickNote / метки;
-3. sync при появлении сети;
-4. recommendation с `ML_LLM_PROVIDER=off` (без внешних ключей).
+---
+
+## User scenario (2–3 минуты)
+
+1. Lobby — выбрать или создать стол  
+2. Рассадка — места, игрок (в т.ч. без имени)  
+3. ColorSystem — метка типа оппонента  
+4. QuickNote — текст и/или теги → Save  
+5. Sync — очередь уходит на API при сети  
+
+<p align="center">
+  <img src="docs/demo/screenshots/01-table-list.png" alt="Lobby" width="220" />
+  <img src="docs/demo/screenshots/02-table-screen.png" alt="Table" width="220" />
+  <img src="docs/demo/screenshots/05-player-type.png" alt="ColorSystem tag" width="220" />
+</p>
+
+<p align="center">
+  <img src="docs/demo/screenshots/06-quick-note-open.png" alt="QuickNote" width="220" />
+  <img src="docs/demo/screenshots/07-note-saved.png" alt="Note saved" width="220" />
+</p>
+
+Скрины — emulator UI baseline (синтетические demo-данные). Полный набор и полевой отчёт: [`docs/demo/`](docs/demo/).
 
 ---
 
@@ -71,8 +91,6 @@ npm run dev              # Expo Metro
 # или Windows: npm run dev:android
 ```
 
-Главный сценарий: логин → Lobby → стол → места/игроки → QuickNote → sync.
-
 Setup: [`docs/setup.md`](docs/setup.md) · тесты: [`docs/testing.md`](docs/testing.md).
 
 ### Recommendations (optional)
@@ -97,25 +115,27 @@ apn-mvp-public/
 ├── backend/           # Alembic + Dockerfiles
 ├── scripts/           # local Android / Maestro helpers
 ├── .maestro/          # E2E smoke flows
-└── docs/              # architecture, setup, testing, ML
+└── docs/              # architecture, setup, testing, ML, demo
 ```
 
 ---
 
-## Status / Limitations
+## Status: Now vs Next
 
-В alpha:
+**Сейчас (public alpha):**
 
 - live table notes + ColorSystem tags;
 - auth + CRUD + offline sync к **local** API;
-- hybrid recommendation с default `off`.
+- hybrid recommendation с default `off`;
+- полевая проверка 2026-07-25 без критического блокера.
 
-Вне alpha / не обещаем как готовое:
+**Дальше (roadmap, не обещание релиза):**
 
-- production cloud / managed hosting;
-- классический ML-классификатор с published precision/recall;
-- полный GTO-движок, Obsidian/TextExpander как must-have интеграции;
-- hard purge / merge игроков и field-debug ops.
+```text
+стабилизация alpha → гибкий стол / 7-max → Live Hand Capture → ML/NLP extension
+```
+
+**Не обещаем как готовое:** production cloud, classical ML classifier с published F1, полный GTO-движок, Obsidian/TextExpander must-have.
 
 ---
 
