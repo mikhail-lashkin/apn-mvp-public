@@ -1,6 +1,6 @@
 # AI Poker Notes (APN-MVP)
 
-**Status:** `public alpha` [/](https://github.com/mikhail-lashkin/apn-mvp-public/releases/tag/v0.1.0-alpha) `v0.1.0-alpha`  
+**Status:** [`public alpha` / `v0.1.0-alpha`](https://github.com/mikhail-lashkin/apn-mvp-public/releases/tag/v0.1.0-alpha)  
 **Репозиторий:** [mikhail-lashkin/apn-mvp-public](https://github.com/mikhail-lashkin/apn-mvp-public)  
 **Стек:** Expo 54 / React Native · FastAPI · PostgreSQL · offline sync · hybrid recommendations
 
@@ -26,7 +26,18 @@
 4. QuickNote — текст и/или теги → Save
 5. Sync — очередь уходит на API при сети
 
-Скрины — emulator UI baseline (синтетические demo-данные). Полный набор и полевой отчёт: `[docs/demo/](docs/demo/)`.
+<p align="center">
+  <img src="docs/demo/screenshots/01-table-list.png" alt="Lobby" width="220" />
+  <img src="docs/demo/screenshots/02-table-screen.png" alt="Table" width="220" />
+  <img src="docs/demo/screenshots/05-player-type.png" alt="ColorSystem tag" width="220" />
+</p>
+
+<p align="center">
+  <img src="docs/demo/screenshots/06-quick-note-open.png" alt="QuickNote" width="220" />
+  <img src="docs/demo/screenshots/07-note-saved.png" alt="Note saved" width="220" />
+</p>
+
+Скрины — emulator UI baseline (синтетические demo-данные). Полный набор и полевой отчёт: [`docs/demo/`](docs/demo/).
 
 ---
 
@@ -55,7 +66,7 @@ Mobile (Expo / Zustand)
 | **Hybrid recommendation** | Rule baseline всегда доступен; LLM — опционально через env |
 
 
-Подробнее: `[docs/architecture.md](docs/architecture.md)`.
+Подробнее: [`docs/architecture.md`](docs/architecture.md).
 
 ---
 
@@ -79,7 +90,7 @@ npm run dev              # Expo Metro
 # или Windows: npm run dev:android
 ```
 
-Setup: `[docs/setup.md](docs/setup.md)` · тесты: `[docs/testing.md](docs/testing.md)`.
+Setup: [`docs/setup.md`](docs/setup.md) · тесты: [`docs/testing.md`](docs/testing.md).
 
 ### Recommendations (optional)
 
@@ -90,7 +101,7 @@ set ML_LLM_PROVIDER=deepseek
 set DEEPSEEK_API_KEY=...
 ```
 
-См. `[docs/ml/recommendation.md](docs/ml/recommendation.md)`.
+См. [`docs/ml/recommendation.md`](docs/ml/recommendation.md).
 
 ---
 
@@ -133,4 +144,4 @@ apn-mvp-public/
 
 ## License
 
-MIT — см. `[LICENSE](LICENSE)`.
+MIT — см. [`LICENSE`](LICENSE).
